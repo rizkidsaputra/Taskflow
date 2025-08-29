@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  db:
+    image: mariadb:10.4
+    container_name: taskflow-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: taskflow
+    volumes:
+      - ./db/data:/var/lib/mysql
+      - ./taskflow-backend/taskflow (5).sql:/docker-entrypoint-initdb.d/taskflow.sql:ro
+    networks:
+      - taskflow-net
+
+  backend:
+    build:
+      context: ./taskflow-backend
+    container_name: taskflow-api
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "5000:80"   # map container port 80 ke host port 5000
+    networks:
+      - taskflow-net
+
+  frontend:
+    build:
+      context: ./TaskFlow-FullStack
+      args:
+        REACT_APP_API_BASE: "http://localhost:5000"
+    container_name: taskflow-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"   # map container port 80 ke host port 3000
+    networks:
+      - taskflow-net
+
+networks:
+  taskflow-net:
+    name: taskflow-net
+    driver: bridge
