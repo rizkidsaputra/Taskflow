@@ -10,7 +10,7 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       - ./db/data:/var/lib/mysql
-      - ./taskflow-backend/taskflow.sql:/docker-entrypoint-initdb.d/taskflow.sql:ro
+      - ./taskflow-backend/taskflow (5).sql:/docker-entrypoint-initdb.d/taskflow.sql:ro
     networks:
       - taskflow-net
 
