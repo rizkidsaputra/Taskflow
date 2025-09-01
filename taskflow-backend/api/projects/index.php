@@ -63,8 +63,9 @@ if ($method === 'POST') {
   $q->execute([$id]);
   $project = $q->fetch(PDO::FETCH_ASSOC);
   $project['tasks'] = [];
-  json_ok(['project' => $project], 201);
+  json_ok(['projects' => [$project]], 201);
 }
+
 
 json_error('Method not allowed', 405);
 ?>
